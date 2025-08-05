@@ -1,0 +1,145 @@
+@model EnglishLearningApp.Application.DTOs.UserProgressDto
+
+@{
+    ViewData["Title"] = "Lesson Results";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-success text-white">
+                    <h2 class="mb-0">
+                        <i class="bi bi-trophy"></i> Lesson Completed!
+                    </h2>
+                    <p class="mb-0 text-white-50">@Model.LessonTitle</p>
+                </div>
+                
+                <div class="card-body text-center">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="score-circle mx-auto mb-3">
+                                <div class="score-number">@Model.Score%</div>
+                            </div>
+                            <h4>Your Score</h4>
+                            <p class="text-muted">@Model.Score out of @Model.TotalQuestions questions correct</p>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="stats-card">
+                                <div class="stat-item">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    <span class="stat-label">Correct Answers</span>
+                                    <span class="stat-value">@Model.Score</span>
+                                </div>
+                                
+                                <div class="stat-item">
+                                    <i class="bi bi-x-circle text-danger"></i>
+                                    <span class="stat-label">Incorrect Answers</span>
+                                    <span class="stat-value">@(Model.TotalQuestions - Model.Score)</span>
+                                </div>
+                                
+                                <div class="stat-item">
+                                    <i class="bi bi-clock text-info"></i>
+                                    <span class="stat-label">Completed At</span>
+                                    <span class="stat-value">@Model.CompletedAt.ToString("MMM dd, yyyy HH:mm")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="performance-indicator mt-4">
+                        @if (Model.Percentage >= 0.8)
+                        {
+                            <div class="alert alert-success">
+                                <i class="bi bi-star-fill"></i>
+                                <strong>Excellent!</strong> You have a great understanding of this topic.
+                            </div>
+                        }
+                        else if (Model.Percentage >= 0.6)
+                        {
+                            <div class="alert alert-warning">
+                                <i class="bi bi-star"></i>
+                                <strong>Good job!</strong> You're on the right track. Keep practicing!
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="bi bi-lightbulb"></i>
+                                <strong>Keep learning!</strong> Review the material and try again.
+                            </div>
+                        }
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <a href="@Url.Action("Start", new { id = Model.LessonId })" class="btn btn-outline-primary me-md-2">
+                            <i class="bi bi-arrow-repeat"></i> Retake Lesson
+                        </a>
+                        <a href="@Url.Action("Index")" class="btn btn-primary">
+                            <i class="bi bi-list"></i> Back to Lessons
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .score-circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .score-number {
+        color: white;
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+    
+    .stats-card {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .stat-item i {
+        font-size: 1.5rem;
+        margin-right: 1rem;
+        width: 30px;
+        text-align: center;
+    }
+    
+    .stat-label {
+        flex: 1;
+        font-weight: 500;
+        color: #6c757d;
+    }
+    
+    .stat-value {
+        font-weight: bold;
+        color: #495057;
+    }
+    
+    .performance-indicator {
+        border-top: 1px solid #dee2e6;
+        padding-top: 1.5rem;
+    }
+</style> 

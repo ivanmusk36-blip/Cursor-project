@@ -1,0 +1,103 @@
+@model IEnumerable<EnglishLearningApp.Application.DTOs.LessonDto>
+
+@{
+    ViewData["Title"] = "English Learning Lessons";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4 text-center mb-4">English Learning Lessons</h1>
+            <p class="lead text-center text-muted mb-5">Choose a lesson to start practicing your English skills</p>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var lesson in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title mb-0">@lesson.Title</h5>
+                            @if (lesson.IsCompleted)
+                            {
+                                <span class="badge bg-success">Completed</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-primary">New</span>
+                            }
+                        </div>
+                        
+                        <p class="card-text text-muted mb-3">@lesson.Description</p>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="bi bi-tag"></i> @lesson.Theme
+                            </small>
+                            <br>
+                            <small class="text-muted">
+                                <i class="bi bi-list-task"></i> @lesson.TaskType
+                            </small>
+                        </div>
+
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <small class="text-muted">
+                                    <i class="bi bi-collection"></i> @lesson.ExerciseCount exercises
+                                </small>
+                                <small class="text-muted">
+                                    <i class="bi bi-star"></i> Level @lesson.Difficulty
+                                </small>
+                            </div>
+
+                            @if (lesson.IsCompleted && lesson.UserScore.HasValue)
+                            {
+                                <div class="mb-3">
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success" style="width: @lesson.UserScore%"></div>
+                                    </div>
+                                    <small class="text-muted">Score: @lesson.UserScore%</small>
+                                </div>
+                            }
+
+                            <div class="d-grid">
+                                @if (lesson.IsCompleted)
+                                {
+                                    <a href="@Url.Action("Start", new { id = lesson.Id })" class="btn btn-outline-primary">
+                                        <i class="bi bi-arrow-repeat"></i> Retake Lesson
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Start", new { id = lesson.Id })" class="btn btn-primary">
+                                        <i class="bi bi-play-circle"></i> Start Lesson
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .progress {
+        border-radius: 10px;
+    }
+    
+    .progress-bar {
+        border-radius: 10px;
+    }
+</style> 

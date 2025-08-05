@@ -1,0 +1,111 @@
+@model EnglishLearningApp.Application.DTOs.LessonWithExercisesDto
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">@Model.Title</h2>
+                    <p class="mb-0 text-white-50">@Model.TaskType</p>
+                </div>
+                
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Instructions:</strong> @Model.TaskType
+                    </div>
+
+                    <form method="post" action="@Url.Action("Submit", new { id = Model.Id })">
+                        @for (int i = 0; i < Model.Exercises.Count; i++)
+                        {
+                            var exercise = Model.Exercises[i];
+                            <div class="exercise-item mb-4 p-3 border rounded">
+                                <h5 class="mb-3">
+                                    <span class="badge bg-secondary me-2">@(i + 1)</span>
+                                    @exercise.Question
+                                </h5>
+                                
+                                <div class="options">
+                                    @foreach (var option in exercise.Options)
+                                    {
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="radio" 
+                                                   name="answers[@exercise.Id]" 
+                                                   id="option_@(exercise.Id)_@(option.Replace(" ", "_"))" 
+                                                   value="@option" required>
+                                            <label class="form-check-label" for="option_@(exercise.Id)_@(option.Replace(" ", "_"))">
+                                                @option
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="@Url.Action("Index")" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-arrow-left"></i> Back to Lessons
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Submit Answers
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .exercise-item {
+        background-color: #f8f9fa;
+        transition: background-color 0.2s ease-in-out;
+    }
+    
+    .exercise-item:hover {
+        background-color: #e9ecef;
+    }
+    
+    .form-check-input:checked + .form-check-label {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+    
+    .options {
+        margin-left: 2rem;
+    }
+</style>
+
+<script>
+    // Add some interactivity
+    document.addEventListener('DOMContentLoaded', function() {
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+        
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Remove previous selections in the same group
+                const name = this.name;
+                const group = document.querySelectorAll(`input[name="${name}"]`);
+                group.forEach(r => {
+                    r.closest('.form-check').classList.remove('selected');
+                });
+                
+                // Add selection to current option
+                this.closest('.form-check').classList.add('selected');
+            });
+        });
+    });
+</script>
+
+<style>
+    .form-check.selected {
+        background-color: #e3f2fd;
+        border-radius: 5px;
+        padding: 5px;
+    }
+</style> 

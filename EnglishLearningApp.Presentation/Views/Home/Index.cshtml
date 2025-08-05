@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <div class="welcome-section">
+                <h1 class="display-3 mb-4">
+                    <i class="bi bi-book text-primary"></i>
+                    Welcome to English Learning
+                </h1>
+                <p class="lead mb-4">
+                    Improve your English skills with interactive exercises and lessons designed to help you learn effectively.
+                </p>
+                
+                <div class="features mb-5">
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="feature-card">
+                                <i class="bi bi-lightbulb text-warning"></i>
+                                <h5>Interactive Lessons</h5>
+                                <p>Engage with dynamic exercises that adapt to your learning pace.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="feature-card">
+                                <i class="bi bi-graph-up text-success"></i>
+                                <h5>Track Progress</h5>
+                                <p>Monitor your improvement with detailed progress tracking and scores.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="feature-card">
+                                <i class="bi bi-repeat text-info"></i>
+                                <h5>Practice Makes Perfect</h5>
+                                <p>Retake lessons to reinforce your understanding and improve your skills.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <a href="@Url.Action("Index", "Lessons")" class="btn btn-primary btn-lg">
+                        <i class="bi bi-play-circle"></i> Start Learning
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .welcome-section {
+        padding: 2rem 0;
+    }
+    
+    .feature-card {
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        height: 100%;
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .feature-card i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .cta-section {
+        margin-top: 3rem;
+    }
+    
+    .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+    }
+</style>
