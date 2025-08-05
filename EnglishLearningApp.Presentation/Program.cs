@@ -23,11 +23,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register Domain interfaces and Infrastructure implementations
 builder.Services.AddScoped<ILessonRepository, LessonRepository>();
 builder.Services.AddScoped<IUserProgressRepository, UserProgressRepository>();
+builder.Services.AddScoped<ISavedExerciseRepository, SavedExerciseRepository>();
 
 // Register Application services
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IUserProgressService, UserProgressService>();
 builder.Services.AddScoped<IInfiniteTestService, InfiniteTestService>();
+builder.Services.AddScoped<ISavedExerciseService, SavedExerciseService>();
 
 // Register HttpClient for API calls
 builder.Services.AddHttpClient();

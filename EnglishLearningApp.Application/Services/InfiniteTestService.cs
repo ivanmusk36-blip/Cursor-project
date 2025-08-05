@@ -170,6 +170,41 @@ public class InfiniteTestService : IInfiniteTestService
         });
     }
 
+    public async Task<SavedExerciseDto> SaveInfiniteTestAsync(SaveExerciseRequestDto request)
+    {
+        // This method will be implemented to save the infinite test
+        // For now, return a mock saved exercise
+        return new SavedExerciseDto
+        {
+            Id = 1,
+            UserId = request.UserId,
+            Title = request.Exercise.Title,
+            Description = request.Exercise.Description,
+            Theme = request.Exercise.Theme,
+            TaskType = request.Exercise.TaskType,
+            Difficulty = request.Exercise.Difficulty,
+            GeneratedRule = request.Exercise.GeneratedRule,
+            CreatedAt = DateTime.UtcNow,
+            CompletedAt = DateTime.UtcNow,
+            Score = request.Score,
+            TotalQuestions = request.TotalQuestions,
+            Percentage = request.Percentage,
+            IsCompleted = true,
+            Questions = request.Exercise.Exercises.Select((ex, index) => new SavedExerciseQuestionDto
+            {
+                Id = index + 1,
+                SavedExerciseId = 1,
+                Question = ex.Question,
+                CorrectAnswer = "", // We don't have correct answers for infinite tests
+                Options = ex.Options,
+                Explanation = "",
+                Order = ex.Order,
+                UserAnswer = request.UserAnswers.TryGetValue(ex.Id, out var answer) ? answer : null,
+                IsCorrect = false // We can't determine correctness without correct answers
+            }).ToList()
+        };
+    }
+
     private InfiniteTestDto CreateFallbackTest(string rule)
     {
         var fallbackQuestions = new List<ExerciseDto>

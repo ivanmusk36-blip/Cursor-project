@@ -13,6 +13,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Lesson> Lessons { get; set; }
     public DbSet<Exercise> Exercises { get; set; }
     public DbSet<UserProgress> UserProgress { get; set; }
+    public DbSet<SavedExercise> SavedExercises { get; set; }
+    public DbSet<SavedExerciseQuestion> SavedExerciseQuestions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -66,6 +68,43 @@ public class ApplicationDbContext : DbContext
             entity.HasOne(e => e.Lesson)
                 .WithMany()
                 .HasForeignKey(e => e.LessonId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // SavedExercise configuration
+        modelBuilder.Entity<SavedExercise>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.Theme).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.TaskType).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Difficulty).IsRequired();
+            entity.Property(e => e.GeneratedRule).HasMaxLength(200);
+            entity.Property(e => e.CreatedAt).IsRequired();
+            entity.Property(e => e.CompletedAt);
+            entity.Property(e => e.Score);
+            entity.Property(e => e.TotalQuestions);
+            entity.Property(e => e.Percentage);
+            entity.Property(e => e.IsCompleted).IsRequired();
+        });
+
+        // SavedExerciseQuestion configuration
+        modelBuilder.Entity<SavedExerciseQuestion>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Question).IsRequired();
+            entity.Property(e => e.CorrectAnswer).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.OptionsJson).IsRequired().HasColumnType("nvarchar(max)");
+            entity.Property(e => e.Explanation).HasMaxLength(500);
+            entity.Property(e => e.Order).IsRequired();
+            entity.Property(e => e.UserAnswer).HasMaxLength(100);
+            entity.Property(e => e.IsCorrect).IsRequired();
+            
+            entity.HasOne(e => e.SavedExercise)
+                .WithMany(se => se.Questions)
+                .HasForeignKey(e => e.SavedExerciseId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 

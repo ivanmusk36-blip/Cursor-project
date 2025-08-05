@@ -1,0 +1,159 @@
+@model EnglishLearningApp.Application.DTOs.SavedExerciseDto
+
+@{
+    ViewData["Title"] = "Exercise Details";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="bi bi-eye"></i> Exercise Details
+                </h2>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">@Model.Title</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">@Model.Description</p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Theme:</strong> @Model.Theme
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Difficulty:</strong> @Model.Difficulty
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Created:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Status:</strong> 
+                            @if (Model.IsCompleted)
+                            {
+                                <span class="badge bg-success">Completed</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">In Progress</span>
+                            }
+                        </div>
+                    </div>
+                    @if (Model.IsCompleted && Model.Score.HasValue)
+                    {
+                        <div class="mt-3">
+                            @{
+                                var percentageText = Model.Percentage.HasValue ? (Model.Percentage.Value * 100).ToString("F0") : "0";
+                            }
+                            <strong>Score:</strong> @Model.Score/@Model.TotalQuestions (@percentageText%)
+                            <div class="progress mt-2">
+                                <div class="progress-bar @(Model.Percentage >= 80 ? "bg-success" : Model.Percentage >= 60 ? "bg-warning" : "bg-danger")" 
+                                     style="width: @(Model.Percentage * 100)%">
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Questions and Answers</h4>
+                </div>
+                <div class="card-body">
+                    @for (int i = 0; i < Model.Questions.Count; i++)
+                    {
+                        var question = Model.Questions[i];
+                        <div class="question-container mb-4 p-3 border rounded">
+                            <h5 class="mb-3">
+                                Question @(i + 1): @question.Question
+                            </h5>
+                            
+                            <div class="options-container">
+                                @foreach (var option in question.Options)
+                                {
+                                    var isUserAnswer = question.UserAnswer == option;
+                                    var isCorrectAnswer = question.CorrectAnswer == option;
+                                    var optionClass = "";
+                                    
+                                    if (isUserAnswer && isCorrectAnswer)
+                                    {
+                                        optionClass = "border-success bg-success bg-opacity-10";
+                                    }
+                                    else if (isUserAnswer && !isCorrectAnswer)
+                                    {
+                                        optionClass = "border-danger bg-danger bg-opacity-10";
+                                    }
+                                    else if (isCorrectAnswer)
+                                    {
+                                        optionClass = "border-success bg-success bg-opacity-10";
+                                    }
+                                    
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" disabled 
+                                               @(isUserAnswer ? "checked" : "")>
+                                        <label class="form-check-label @optionClass p-2 rounded w-100">
+                                            @option
+                                            @if (isUserAnswer)
+                                            {
+                                                <i class="bi bi-check-circle-fill text-success ms-2"></i>
+                                                <small class="text-muted ms-2">(Your answer)</small>
+                                            }
+                                            @if (isCorrectAnswer && !isUserAnswer)
+                                            {
+                                                <i class="bi bi-check-circle-fill text-success ms-2"></i>
+                                                <small class="text-success ms-2">(Correct answer)</small>
+                                            }
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            
+                            @if (!string.IsNullOrEmpty(question.Explanation))
+                            {
+                                <div class="mt-3 p-3 bg-light rounded">
+                                    <strong>Explanation:</strong> @question.Explanation
+                                </div>
+                            }
+                            
+                            <div class="mt-2">
+                                @if (question.IsCorrect)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Correct
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-x-circle"></i> Incorrect
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .question-container {
+        background-color: #f8f9fa;
+    }
+    
+    .options-container .form-check-label {
+        cursor: default;
+        transition: all 0.2s;
+    }
+    
+    .options-container .form-check-label:hover {
+        background-color: #e9ecef;
+    }
+</style> 

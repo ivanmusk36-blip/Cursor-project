@@ -9,12 +9,14 @@ public class LessonsController : Controller
     private readonly ILessonService _lessonService;
     private readonly IUserProgressService _userProgressService;
     private readonly IInfiniteTestService _infiniteTestService;
+    private readonly ISavedExerciseService _savedExerciseService;
 
-    public LessonsController(ILessonService lessonService, IUserProgressService userProgressService, IInfiniteTestService infiniteTestService)
+    public LessonsController(ILessonService lessonService, IUserProgressService userProgressService, IInfiniteTestService infiniteTestService, ISavedExerciseService savedExerciseService)
     {
         _lessonService = lessonService;
         _userProgressService = userProgressService;
         _infiniteTestService = infiniteTestService;
+        _savedExerciseService = savedExerciseService;
     }
 
     public async Task<IActionResult> Index()
@@ -84,7 +86,7 @@ public class LessonsController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> SubmitInfiniteTest(Dictionary<int, string> answers, string generatedRule)
+    public async Task<IActionResult> SubmitInfiniteTest(Dictionary<int, string> answers, string generatedRule, bool saveExercise = true)
     {
         // For demo purposes, using a fixed user ID
         var userId = "demo-user";
@@ -92,6 +94,26 @@ public class LessonsController : Controller
         try
         {
             var result = await _infiniteTestService.SubmitInfiniteTestAnswersAsync(userId, answers, generatedRule);
+            
+            // Save the exercise if requested
+            if (saveExercise)
+            {
+                // Get the current test from session or regenerate it
+                var currentTest = await _infiniteTestService.GenerateInfiniteTestAsync();
+                
+                var saveRequest = new SaveExerciseRequestDto
+                {
+                    UserId = userId,
+                    Exercise = currentTest,
+                    UserAnswers = answers,
+                    Score = result.Score,
+                    TotalQuestions = result.TotalQuestions,
+                    Percentage = result.Percentage
+                };
+                
+                await _savedExerciseService.SaveExerciseAsync(saveRequest);
+            }
+            
             return RedirectToAction(nameof(InfiniteTestResult), new { generatedRule = generatedRule });
         }
         catch (ArgumentException)
