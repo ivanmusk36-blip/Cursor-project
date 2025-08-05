@@ -1,0 +1,100 @@
+@model EnglishLearningApp.Application.DTOs.UserProgressDto
+
+@{
+    ViewData["Title"] = "Infinite Test Result";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">
+                        <i class="bi bi-trophy"></i> Test Results
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h3 class="text-primary">@Model.LessonTitle</h3>
+                        <p class="text-muted">Completed on @Model.CompletedAt.ToString("MMMM dd, yyyy 'at' HH:mm")</p>
+                    </div>
+
+                    <div class="row text-center mb-4">
+                        <div class="col-md-6">
+                            <div class="border rounded p-3">
+                                <h4 class="text-success">@Model.Score%</h4>
+                                <p class="text-muted mb-0">Your Score</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3">
+                                <h4 class="text-info">@Model.TotalQuestions</h4>
+                                <p class="text-muted mb-0">Total Questions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="progress mb-4" style="height: 25px;">
+                        <div class="progress-bar bg-success" style="width: @Model.Score%" role="progressbar"
+                            aria-valuenow="@Model.Score" aria-valuemin="0" aria-valuemax="100">
+                            @Model.Score%
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        @if (Model.Score >= 90)
+                        {
+                            <div class="alert alert-success">
+                                <i class="bi bi-star-fill"></i>
+                                <strong>Excellent!</strong> You have a great understanding of this topic.
+                            </div>
+                        }
+                        else if (Model.Score >= 70)
+                        {
+                            <div class="alert alert-warning">
+                                <i class="bi bi-star"></i>
+                                <strong>Good job!</strong> You're on the right track, keep practicing.
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="bi bi-lightbulb"></i>
+                                <strong>Keep learning!</strong> Practice makes perfect.
+                            </div>
+                        }
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <a href="@Url.Action("InfiniteTest")" class="btn btn-primary btn-lg">
+                            <i class="bi bi-arrow-repeat"></i> Take Another Test
+                        </a>
+                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-house"></i> Back to Lessons
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .progress {
+        border-radius: 15px;
+    }
+
+    .progress-bar {
+        border-radius: 15px;
+        font-weight: bold;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+</style>

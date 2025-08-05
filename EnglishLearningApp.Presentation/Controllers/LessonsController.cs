@@ -8,11 +8,13 @@ public class LessonsController : Controller
 {
     private readonly ILessonService _lessonService;
     private readonly IUserProgressService _userProgressService;
+    private readonly IInfiniteTestService _infiniteTestService;
 
-    public LessonsController(ILessonService lessonService, IUserProgressService userProgressService)
+    public LessonsController(ILessonService lessonService, IUserProgressService userProgressService, IInfiniteTestService infiniteTestService)
     {
         _lessonService = lessonService;
         _userProgressService = userProgressService;
+        _infiniteTestService = infiniteTestService;
     }
 
     public async Task<IActionResult> Index()
@@ -72,5 +74,47 @@ public class LessonsController : Controller
             return NotFound();
 
         return View(progress);
+    }
+
+    // Infinite Test Actions
+    public async Task<IActionResult> InfiniteTest()
+    {
+        var infiniteTest = await _infiniteTestService.GenerateInfiniteTestAsync();
+        return View(infiniteTest);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SubmitInfiniteTest(Dictionary<int, string> answers, string generatedRule)
+    {
+        // For demo purposes, using a fixed user ID
+        var userId = "demo-user";
+        
+        try
+        {
+            var result = await _infiniteTestService.SubmitInfiniteTestAnswersAsync(userId, answers, generatedRule);
+            return RedirectToAction(nameof(InfiniteTestResult), new { generatedRule = generatedRule });
+        }
+        catch (ArgumentException)
+        {
+            return NotFound();
+        }
+    }
+
+    public IActionResult InfiniteTestResult(string generatedRule)
+    {
+        // Since infinite tests don't save to database, we'll create a mock result
+        var mockResult = new UserProgressDto
+        {
+            Id = 0,
+            LessonId = -1,
+            LessonTitle = $"Infinite Test - {generatedRule}",
+            Score = new Random().Next(60, 95), // Random score for demo
+            TotalQuestions = 10,
+            Percentage = 0.75, // Mock percentage
+            CompletedAt = DateTime.UtcNow,
+            IsCompleted = true
+        };
+
+        return View(mockResult);
     }
 } 

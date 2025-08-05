@@ -1,89 +1,104 @@
 # English Learning App
 
-A .NET 8 MVC application designed to help people learn English through interactive exercises and lessons.
+A .NET 8 web application for learning English grammar through interactive lessons and AI-generated tests.
 
 ## Features
 
-- **Interactive Lessons**: Multiple-choice exercises with immediate feedback
-- **Progress Tracking**: Track your scores and completion status
-- **Beautiful UI**: Modern, responsive design with Bootstrap 5
-- **Clean Architecture**: Follows Clean Architecture principles with proper separation of concerns
+### Regular Lessons
+
+- **Articles Exercise**: Learn when to use 'a', 'an', and 'the' in English sentences
+- **Pronouns Exercise**: Practice using different types of pronouns in English sentences
+- **Verb Tenses**: Practice using different verb tenses in English
+
+### Infinite Test (NEW!)
+
+- **AI-Generated Tests**: Uses Grok API to generate random English grammar tests
+- **Random Rules**: Each test focuses on a random grammar rule (articles, pronouns, verb tenses, etc.)
+- **10 Questions**: Each test contains 10 multiple-choice questions
+- **No Progress Tracking**: Infinite tests don't save progress to the database, allowing unlimited practice
 
 ## Architecture
 
-The application follows Clean Architecture principles:
+This application follows Clean Architecture principles:
 
 - **Domain Layer**: Contains entities and interfaces
 - **Application Layer**: Contains business logic and DTOs
-- **Infrastructure Layer**: Contains data access and external services
+- **Infrastructure Layer**: Contains data access and external service implementations
 - **Presentation Layer**: Contains controllers and views
 
-## Getting Started
+## Setup
 
-### Prerequisites
+1. **Clone the repository**
+2. **Configure the API Key**:
+   - The API key is stored securely using .NET User Secrets
+   - Set your Grok API key using the following command:
+   ```bash
+   cd EnglishLearningApp.Presentation
+   dotnet user-secrets set "testGrokAPIKey" "your-actual-grok-api-key-here"
+   ```
+3. **Run the application**:
+   ```bash
+   cd EnglishLearningApp.Presentation
+   dotnet run
+   ```
 
-- .NET 8 SDK
-- SQL Server LocalDB (included with Visual Studio)
+## Infinite Test Implementation
 
-### Running the Application
+The infinite test feature uses the Grok API to generate random English grammar tests:
 
-1. Clone the repository
-2. Navigate to the project directory
-3. Run the following commands:
+### API Integration
 
-```bash
-dotnet restore
-dotnet build
-cd EnglishLearningApp.Presentation
-dotnet run
+- **Endpoint**: `https://api.x.ai/v1/chat/completions`
+- **Model**: `grok-beta`
+- **Prompt**: Simple prompt requesting 10 multiple-choice questions about a random grammar rule
+- **Fallback**: If API fails, uses hardcoded questions
+
+### Random Rules
+
+The system randomly selects from these grammar topics:
+
+- Articles (a, an, the)
+- Pronouns (he, she, they, etc.)
+- Verb tenses (present, past, future)
+- Prepositions (in, on, at, etc.)
+- Adjectives and adverbs
+- Conditional sentences
+- Passive voice
+- Reported speech
+- Modal verbs
+- Phrasal verbs
+
+### Simple Prompt
+
+The prompt is kept as simple as possible:
+
+```
+Generate 10 multiple choice English grammar questions about {randomRule}.
+Format as JSON with: rule, questions array with question, correctAnswer, options array, explanation.
+Make questions clear and explanations helpful.
 ```
 
-4. Open your browser and navigate to `https://localhost:5001` or `http://localhost:5000`
+### Security
 
-## Available Lessons
-
-1. **Pronouns Exercise**: Learn and practice using different types of pronouns
-2. **Verb Tenses**: Practice using different verb tenses in English
-3. **Articles Exercise**: Learn when to use 'a', 'an', and 'the'
-
-## How to Use
-
-1. **Browse Lessons**: View all available lessons on the main page
-2. **Start a Lesson**: Click "Start Lesson" to begin an exercise
-3. **Answer Questions**: Select the correct answer for each question
-4. **Submit Answers**: Click "Submit Answers" to see your results
-5. **View Results**: See your score and performance feedback
-6. **Retake Lessons**: Improve your score by retaking lessons
+- **API Key Security**: The Grok API key is stored securely using .NET User Secrets
+- **No Hardcoded Secrets**: No API keys are stored in source code or configuration files
+- **Development Only**: User secrets are only loaded in development environment
 
 ## Technology Stack
 
-- **.NET 8**: Latest version of .NET
-- **ASP.NET Core MVC**: Web framework
-- **Entity Framework Core**: ORM for data access
-- **SQL Server LocalDB**: Local database
-- **Bootstrap 5**: CSS framework for responsive design
-- **Bootstrap Icons**: Icon library
+- **.NET 8**
+- **ASP.NET Core MVC**
+- **Entity Framework Core**
+- **SQL Server LocalDB**
+- **Bootstrap 5**
+- **Grok API** (for infinite tests)
 
 ## Project Structure
 
 ```
 EnglishLearningApp/
 ├── EnglishLearningApp.Domain/          # Domain entities and interfaces
-├── EnglishLearningApp.Application/     # Business logic and DTOs
+├── EnglishLearningApp.Application/      # Business logic and DTOs
 ├── EnglishLearningApp.Infrastructure/  # Data access and external services
-└── EnglishLearningApp.Presentation/    # Controllers and views
+└── EnglishLearningApp.Presentation/    # Web application (MVC)
 ```
-
-## Database
-
-The application uses Entity Framework Core with SQL Server LocalDB. The database is automatically created when the application starts for the first time.
-
-## Contributing
-
-This is a demo application showcasing Clean Architecture principles in .NET 8. Feel free to extend it with additional features like:
-
-- User authentication
-- More lesson types
-- Advanced progress tracking
-- Admin panel for managing lessons
-- Export functionality for progress reports 

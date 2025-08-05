@@ -7,6 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add user secrets for development
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -21,6 +27,10 @@ builder.Services.AddScoped<IUserProgressRepository, UserProgressRepository>();
 // Register Application services
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IUserProgressService, UserProgressService>();
+builder.Services.AddScoped<IInfiniteTestService, InfiniteTestService>();
+
+// Register HttpClient for API calls
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

@@ -1,0 +1,84 @@
+@model EnglishLearningApp.Application.DTOs.InfiniteTestDto
+
+@{
+    ViewData["Title"] = "Infinite Test";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="display-4">@Model.Title</h1>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Lessons
+                </a>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                <strong>Generated Rule:</strong> @Model.GeneratedRule
+            </div>
+
+            <p class="lead text-muted mb-4">@Model.Description</p>
+        </div>
+    </div>
+
+    <form method="post" action="@Url.Action("SubmitInfiniteTest")">
+        <input type="hidden" name="generatedRule" value="@Model.GeneratedRule" />
+
+        @for (int i = 0; i < Model.Exercises.Count; i++)
+        {
+            var exercise = Model.Exercises[i];
+            <div class="exercise-item mb-4 p-4 border rounded shadow-sm">
+                <h5 class="mb-3">
+                    <span class="badge bg-primary me-2">@(i + 1)</span>
+                    @exercise.Question
+                </h5>
+
+                <div class="options">
+                    @foreach (var option in exercise.Options)
+                    {
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="answers[@exercise.Id]"
+                                id="option_@(exercise.Id)_@(option.Replace(" ", "_"))" value="@option" required>
+                            <label class="form-check-label" for="option_@(exercise.Id)_@(option.Replace(" ", "_"))">
+                                @option
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="bi bi-check-circle"></i> Submit Test
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .exercise-item {
+        background-color: #fff;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .exercise-item:hover {
+        transform: translateY(-2px);
+    }
+
+    .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .form-check-label {
+        cursor: pointer;
+        padding-left: 0.5rem;
+    }
+
+    .badge {
+        font-size: 0.8rem;
+    }
+</style>

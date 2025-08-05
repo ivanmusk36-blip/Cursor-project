@@ -29,9 +29,9 @@
                                 <span class="badge bg-primary">New</span>
                             }
                         </div>
-                        
+
                         <p class="card-text text-muted mb-3">@lesson.Description</p>
-                        
+
                         <div class="mb-3">
                             <small class="text-muted">
                                 <i class="bi bi-tag"></i> @lesson.Theme
@@ -81,6 +81,49 @@
                 </div>
             </div>
         }
+
+        <!-- Infinite Test Card -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 border-primary">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-infinity text-primary me-2"></i>Infinite Test
+                        </h5>
+                        <span class="badge bg-warning">AI Generated</span>
+                    </div>
+
+                    <p class="card-text text-muted mb-3">AI-generated English grammar test with random questions</p>
+
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="bi bi-tag"></i> Mixed Grammar
+                        </small>
+                        <br>
+                        <small class="text-muted">
+                            <i class="bi bi-list-task"></i> Multiple Choice
+                        </small>
+                    </div>
+
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <small class="text-muted">
+                                <i class="bi bi-collection"></i> 10 exercises
+                            </small>
+                            <small class="text-muted">
+                                <i class="bi bi-star"></i> Level 2
+                            </small>
+                        </div>
+
+                        <div class="d-grid">
+                            <a href="@Url.Action("InfiniteTest")" class="btn btn-primary">
+                                <i class="bi bi-play-circle"></i> Start Infinite Test
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -88,16 +131,16 @@
     .card {
         transition: transform 0.2s ease-in-out;
     }
-    
+
     .card:hover {
         transform: translateY(-5px);
     }
-    
+
     .progress {
         border-radius: 10px;
     }
-    
+
     .progress-bar {
         border-radius: 10px;
     }
-</style> 
+</style>
